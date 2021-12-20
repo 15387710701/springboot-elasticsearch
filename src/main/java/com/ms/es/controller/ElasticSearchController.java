@@ -149,12 +149,17 @@ public class ElasticSearchController {
     }
 
     @GetMapping("data/page1")
-    public List<Map<String, Object>> selectPage(String index) throws IOException {
+    public List<Map<String, Object>> selectPage(String index,String name,String sortField) throws IOException {
         //构建查询条件
         BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
 
         SearchSourceBuilder query = new SearchSourceBuilder();
+        boolQueryBuilder.filter(QueryBuilders.wildcardQuery("name", name));
         query.query(boolQueryBuilder);
+        if (!StringUtils.isEmpty(sortField)){
+            query.sort(sortField,SortOrder.ASC);
+        }
+
         //需要查询的字段，缺省则查询全部
 
         //需要高亮显示的字段
